@@ -108,3 +108,55 @@ class DataManager:
             df.loc[df["id"] == id_okr, key] = value
         self.conn.update(worksheet="okrs", data=df)
         st.cache_data.clear()
+
+    def save_tarea(self, nueva_tarea_dict):
+        df_actual = self.conn.read(worksheet="tareas")
+        # Generar ID para la tarea
+        nueva_tarea_dict["id"] = len(df_actual) + 1
+        df_nuevo = pd.DataFrame([nueva_tarea_dict])
+        df_final = pd.concat([df_actual, df_nuevo], ignore_index=True)
+        self.conn.update(worksheet="tareas", data=df_final)
+        st.cache_data.clear()
+
+    def delete_tarea(self, tarea_id):
+        df = self.conn.read(worksheet="tareas")
+        df = df[df["id"].astype(str) != str(tarea_id)]
+        self.conn.update(worksheet="tareas", data=df)
+        st.cache_data.clear()
+    def update_tarea(self, tarea_id, nuevos_datos):
+        """
+        Actualiza campos específicos de una tarea identificada por su ID.
+        nuevos_datos: diccionario con los campos a cambiar (ej: {"estado": "Hecho"})
+        """
+        try:
+            # 1. Leer los datos actuales
+            df = self.conn.read(worksheet="tareas")
+            
+            if df.empty:
+                return False
+
+            # 2. Asegurar que el ID sea comparado correctamente (limpieza de tipos)
+            df['id'] = df['id'].astype(str).str.replace(".0", "", regex=False).str.strip()
+            id_buscado = str(tarea_id).replace(".0", "").strip()
+
+            # 3. Localizar y actualizar
+            if id_buscado in df['id'].values:
+                for campo, valor in nuevos_datos.items():
+                    if campo in df.columns:
+                        df.loc[df['id'] == id_buscado, campo] = valor
+                
+                # 4. Guardar de nuevo en Google Sheets
+                # Limpiamos nulos antes de subir para evitar errores
+                df_para_subir = df.fillna("")
+                self.conn.update(worksheet="tareas", data=df_para_subir)
+                
+                # 5. Limpiar caché para que la UI vea el cambio
+                st.cache_data.clear()
+                return True
+            else:
+                st.error(f"No se encontró la tarea con ID {id_buscado}")
+                return False
+                
+        except Exception as e:
+            st.error(f"Error al actualizar la tarea: {e}")
+            return False

@@ -22,7 +22,8 @@ if not st.session_state.authenticated:
     with st.form("login_form"):
         st.title("OKRs Empresarial")
         st.markdown("Introduce tus credenciales corporativas")
-        
+        st.write("Manager: manager@gmail.com - Contraseña: manager123")
+        st.write("Empleado: empleado@gmail.com - Contraseña: emp123")
         email = st.text_input("Correo Electrónico")
         password = st.text_input("Contraseña", type="password")
         
