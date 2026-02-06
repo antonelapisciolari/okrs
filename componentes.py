@@ -517,7 +517,7 @@ def render_manager_view(empleados_df, okrs_df, tareas_df, areas_df):
     with tabs[0]: render_manager_dashboard(empleados_df, okrs_df, tareas_df, areas_df)
     with tabs[1]: render_okrs_corporativos(okrs_df)
     with tabs[2]: render_gestion_empleados_fragment(empleados_df, areas_df)
-    with tabs[3]: render_asistente_ia(empleados_df, okrs_df, tareas_df, areas_df, st.session_state.user)
+    with tabs[3]: render_asistente_ia(okrs_df,  st.session_state.user)
 
 def render_employee_view(user_data, okrs_df, tareas_df):
     st.title(f"🚀 Panel de: {user_data['nombre']}")
