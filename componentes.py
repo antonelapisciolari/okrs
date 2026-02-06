@@ -91,14 +91,19 @@ def render_manager_dashboard(empleados_df, okrs_df, tareas_df, areas_df):
         st.subheader(f"📊 Progreso del Equipo - {anio_actual}")
         
         areas_disponibles = ["Todas"] + (areas_df['nombre'].tolist() if not areas_df.empty else [])
-        col1, col2 = st.columns([1, 4])
+        col1, col2,_ = st.columns([1, 2,2])
         with col1:
             area_sel = st.selectbox("Filtrar por Área/Departamento", areas_disponibles)
-
-        solo_empleados = empleados_df
+        with col2:
+            busqueda_nombre = st.text_input("Buscar empleado por nombre", placeholder="Ej: Juan Pérez")
+        
+        solo_empleados = empleados_df.copy()
         if area_sel != "Todas":
             solo_empleados = solo_empleados[solo_empleados['area'] == area_sel]
-
+        if busqueda_nombre:
+                solo_empleados = solo_empleados[
+                    solo_empleados['nombre'].str.contains(busqueda_nombre, case=False, na=False)
+                ]
         if solo_empleados.empty:
             st.warning(f"No hay empleados registrados en el área: {area_sel}")
             return
