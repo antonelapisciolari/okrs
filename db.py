@@ -11,7 +11,7 @@ load_dotenv()
 url = os.getenv("SUPABASE_URL")
 key = os.getenv("SUPABASE_KEY")
 env = os.getenv("SUPABASE_ENV")
-
+gemini = os.getenv("GEMINI_API_KEY")
 supabase: Client = create_client(url, key)
 
 # --- MÉTODO CORE PARA DATA_EDITOR ---
@@ -129,7 +129,7 @@ def delete_tarea(tarea_id):
 # --- FUNCIÓN IA (SE MANTIENE IGUAL PERO USANDO SECRETS) ---
 def preguntar_gemini_personalizado(prompt, contexto_okrs, rol_usuario):
     try:
-        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+        client = genai.Client(api_key=gemini)
         instrucciones_sistema = f"""
         Eres un consultor experto en OKRs. Usuario: {rol_usuario}.
         Contexto: {contexto_okrs}.
@@ -137,7 +137,7 @@ def preguntar_gemini_personalizado(prompt, contexto_okrs, rol_usuario):
         Responde en español con tono profesional.
         """
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-2.0-flash',
             contents=prompt,
             config=types.GenerateContentConfig(
                 system_instruction=instrucciones_sistema,

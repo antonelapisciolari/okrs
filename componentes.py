@@ -513,15 +513,15 @@ def render_employee_dashboard(okrs_df, tareas_df, user_id_actual):
 
 def render_manager_view(empleados_df, okrs_df, tareas_df, areas_df):
     st.title("🛡️ Panel de Dirección")
-    tabs = st.tabs(["📊 Dashboard Equipo", "🎯 OKRs Corporativos", "👥 Empleados", "🤖 Asistente IA"])
+    tabs = st.tabs(["📊 Dashboard Equipo", "🎯 OKRs Corporativos", "👥 Empleados"])
     with tabs[0]: render_manager_dashboard(empleados_df, okrs_df, tareas_df, areas_df)
     with tabs[1]: render_okrs_corporativos(okrs_df)
     with tabs[2]: render_gestion_empleados_fragment(empleados_df, areas_df)
-    with tabs[3]: render_asistente_ia(okrs_df,  st.session_state.user)
+    #with tabs[3]: render_asistente_ia(okrs_df,  st.session_state.user)
 
 def render_employee_view(user_data, okrs_df, tareas_df):
     st.title(f"🚀 Panel de: {user_data['nombre']}")
-    tabs = st.tabs(["📊 Dashboard", "📉 Mis Objetivos", "🏢 OKRs Empresa", "🤖 Asistente IA"])
+    tabs = st.tabs(["📊 Dashboard", "📉 Mis Objetivos", "🏢 OKRs Empresa"])
     with tabs[0]: render_employee_dashboard(okrs_df, tareas_df, user_data['id'])
     with tabs[1]: render_mis_okrs_empleado(okrs_df, tareas_df, user_data['id'])
     with tabs[2]:
@@ -535,4 +535,4 @@ def render_employee_view(user_data, okrs_df, tareas_df):
                 with st.container(border=True):
                     st.write(f"**{r['nombre']}**")
                     st.caption(r['descripcion'])
-    with tabs[3]: render_asistente_ia(okrs_df, user_data)
+    #with tabs[3]: render_asistente_ia(okrs_df, user_data)
