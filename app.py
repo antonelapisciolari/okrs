@@ -1,16 +1,14 @@
 import streamlit as st
-from db import DataManager
+from db import load_all_data
 import auth as auth
 import componentes as ui
-
 # 1. Configuración e Inicialización
 st.set_page_config(page_title="OKR Enterprise System")
 auth.init_session()
-db = DataManager()
 
 # 2. Carga de datos (silenciosa para el login)
 try:
-    empleados, okrs, tareas = db.load_all_data()
+    empleados, okrs, tareas, areas= load_all_data()
 except Exception as e:
     st.error("Error al conectar con la base de datos.")
     st.stop()
@@ -22,7 +20,7 @@ if not st.session_state.authenticated:
     with st.form("login_form"):
         st.title("OKRs Empresarial")
         st.markdown("Introduce tus credenciales corporativas")
-        st.write("Manager: manager@gmail.com - Contraseña: manager123")
+        st.write("Manager: manager@yopmail.com - Contraseña: manager123")
         st.write("Empleado: empleado@gmail.com - Contraseña: emp123")
         email = st.text_input("Correo Electrónico")
         password = st.text_input("Contraseña", type="password")
@@ -51,6 +49,6 @@ else:
 
     # Router por Rol
     if user['rol'].lower() == "manager":
-        ui.render_manager_view(db, empleados, okrs)
+        ui.render_manager_view(empleados, okrs, tareas, areas)
     else:
         ui.render_employee_view(user, okrs, tareas)
